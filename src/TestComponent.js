@@ -4,21 +4,22 @@ import 'whatwg-fetch';
 
 const API_URL = 'http://api.giphy.com/v1/gifs/';
 const API_KEY = 'dc6zaTOxFJmzC';
+const API_URL_SEARCH = 'http://api.giphy.com/v1/gifs/search?q=car+dog&api_key=dc6zaTOxFJmzC&limit=1000';
 const METHODS_TRENDING = 'trending';
 const METHODS_SEATCH = 'search';
 
-function getUrl (url, methods, valueSearch, offset, limit) {
+function getUrl (url,methods,valueSearch,offset, limit) {
   let searchValue = valueSearch;
 
   if(methods === 'search') {
-     searchValue = getSearchQuery(valueSearch);
+     searchValue = GetSearchQuery(valueSearch);
   } else {
      searchValue = '';
   }
   return `${url}${methods}?${searchValue}&api_key=${API_KEY}&offset=${offset}&limit=${limit}`;
 }
 
-function getSearchQuery (value) {
+const GetSearchQuery = (value) => {
    value = value.split(' ');
    return 'q=' + value.join('+');
 }
@@ -52,6 +53,11 @@ class TestComponent extends React.Component {
     return fetch(url);
   }
 
+  searchImages() {
+    let url = API_URL_SEARCH;
+    return fetch(url);
+  }
+
   updateImages() {
     this.preload()
     this.fetchImages(METHODS_TRENDING)
@@ -82,7 +88,7 @@ class TestComponent extends React.Component {
       });
   }
 
- loadMore() {
+  loadMore() {
     this.setState({
       offset: this.state.offset + LOAD_SIZE
     }, () => {
@@ -94,7 +100,7 @@ class TestComponent extends React.Component {
     });
   }
 
- preload() {
+  preload() {
     if(this.state.preload === true) {
       this.setState({
         preload: false,
@@ -116,8 +122,7 @@ handleChange(event) {
 
 searchBtn() {
   this.setState({
-    images: [],
-    offset: LOAD_SIZE
+    images: []
   })
   if(this.state.inputValue === '') {
     this.updateImages();
